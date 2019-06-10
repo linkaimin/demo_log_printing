@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>查询网页</title>
+    <script src="js/jquery.js"></script>
+    <!-- Bootstrap -->
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="css/bootstrap.min.css" >
+<link rel="stylesheet" href="css/bootstrap-table.css">
+  </head>
+  <body> 
+          
+      <nav class="navbar navbar-inverse" role="navigation">
+            <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">数据查询</a>
+            </div>
+        </nav>
+        <br>
+        <div class="panel panel-default container text-center">
+                <ul class="list-group">
+                        <form id='form'> 
+                            <li class=" list-group-item">       
+                                    <strong>level :</strong>
+                            <label><input value="warn" type="checkbox" name="level" />warn </label> 
+                            <label><input value="info" checked type="checkbox"  name="level"/>info </label> 
+                            <label><input value="error" type="checkbox" name="level" />error </label> 
+                            <label><input value="debug" type="checkbox"  name="level"/>debug </label> 
+                            </li>
+                            <li class="list-group-item">
+                                    <strong>application：</strong><input maxlength="12" minlength="2" name="application" type='text' placeholder="请输入" size=22px> 
+                            </li>
+                            <li class="list-group-item">
+                                    <strong>tag：</strong><input maxlength="12" minlength="2" name="tag" type='text' placeholder="请输入" size=29px> 
+                            </li>
+                            <li class="list-group-item">
+                                    <strong>timestamp：</strong><input name="timestamp" type="datetime-local"  size=25px>
+                            </li>
+                            <li class="list-group-item">
+                                <strong>模糊查询：</strong><input  name="fuzzyQuery" type='text' placeholder="请输入" size=23px> 
+                            </li>
+                            <li class="list-group-item">
+                            <button type='button' id="btn" class="btn btn-primary" >查询</button>
+                            </li>
+                        </form>
+                            
+                </ul>
+            </div>
+            <nav class="navbar navbar-inverse navbar-fixed-bottom" id="footer">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <p style="font-size: 10px;" class="navbar-brand" ></p>
+                        </div>
+                    </div>
+                </nav>
+                <div class="panel panel-default container text-center">
+                    <h5>查询结果</h5>
+                    <p > <table  id="table" style="margin: 0 auto">
+                        </table></p>
+                </div>
+     <script src="js/jquery-1.11.0.js"></script>          
+    <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-table.js"></script>
+    <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+   
+ 
+<script>
+    
+    $("#btn").click(function(){
+                                            console.log(JSON.stringify($("#form6")))
+                                        var temp = JSON.stringify({
+                            
+                                            level:$("#form").serializeArray()[0].value,
+                                            application:$("#form").serializeArray()[1].value,
+                                            tag:$("#form").serializeArray()[2].value,
+                                            timestamp:$("#form").serializeArray()[3].value,
+                                            content:$("#form").serializeArray()[4].value,
+                                              
+                                        });
+                                
+                                        console.log(temp);
+                                            $.ajax({
+                                                url: "http://222.27.227.103:8081/consumer/selectLog",
+                                                type:"POST",
+                                                data: temp,
+                                                contentType:'application/json',
+                                                        // 这里把表单里面的数据放在这里传到后台
+                                                success:function(res){
+                                                    console.log(res.data)
+                                                    console.log(res.data);
+                    $("#table").bootstrapTable('destroy'); 
+                    $('#table').bootstrapTable({
+                    data:res.data,
+                    striped: true,
+                    singleSelect: false,
+                    dataType: "json",
+                    pagination: true, //分页
+                    pageSize: 10,
+                    pageNumber: 1,
+                    search: false, //显示搜索框
+                    contentType: JSON,
+                    queryParams: null,
+                    columns: [
+                    {
+                            title: "application",
+                            field: 'application',
+                            align: 'center',
+                            valign: 'middle'
+                        },
+                        {
+                            title: 'timestamp',
+                            field: 'timestamp',
+                            align: 'center',
+                            valign: 'middle'
+                        },
+                    						 {
+                            title: "level",
+                            field: 'level',
+                            align: 'center',
+                            valign: 'middle'
+                        }, 
+                        	
+                        {
+                            title: "tag",
+                            field: 'tag',
+                            align: 'center',
+                            valign: 'middle'
+                        },   
+                    {
+                            title: 'content',
+                            field: 'content',
+                             align: 'center',
+                            valign: 'middle'
+                        },
+
+
+					
+                     
+
+                    ]
+                });
+               
+                }
+     
+                 
+                })
+                return false;
+    })
+
+                                         
+
+</script>
+ </body>
+ </html>
